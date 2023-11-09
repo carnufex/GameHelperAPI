@@ -38,7 +38,12 @@ def getHp(screenshot: GrayImage) -> Union[int, None]:
         return None
     position = skillsIconPosition[0] + 5, skillsIconPosition[1] + \
         89, skillsIconPosition[2], skillsIconPosition[3]
-    return getValuesCount(screenshot, position)
+    val = getValuesCount(screenshot, position)
+    if val == 0: # xp boost
+        position = position[0], position[1]-6, position[2], position[3]
+        val = getValuesCount(screenshot, position)
+    return val
+    
 
 
 # TODO: add unit tests
@@ -49,7 +54,11 @@ def getMana(screenshot: GrayImage) -> Union[int, None]:
         return None
     position = skillsIconPosition[0] + 5, skillsIconPosition[1] + \
         103, skillsIconPosition[2], skillsIconPosition[3]
-    return getValuesCount(screenshot, position)
+    val = getValuesCount(screenshot, position)
+    if val == 0: # xp boost
+        position = position[0], position[1]-6, position[2], position[3]
+        val = getValuesCount(screenshot, position)
+    return val
 
 
 # TODO: add unit tests
