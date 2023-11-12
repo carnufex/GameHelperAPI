@@ -10,100 +10,73 @@ import win32service
 import win32ui
 
 
-def send_click_input(pycwnd, x, y, button='left'):
-    # lParam = int(y) <<16 | int(x)
-    lParam = win32api.MAKELONG(x, y)
-    if button == 'left':
-        pycwnd.SendMessage(win32con.WM_LBUTTONDOWN,
-                           win32con.MK_LBUTTON, lParam)
-        pycwnd.SendMessage(win32con.WM_LBUTTONUP, 0, lParam)
-    else:
-        print("right click", x, y)
-        pycwnd.SendMessage(win32con.WM_ACTIVATEAPP, win32con.WM_ACTIVATEAPP, 0)
-        pycwnd.SendMessage(win32con.WM_MOUSEMOVE, 0, lParam)
-        pycwnd.SendMessage(win32con.WM_RBUTTONDOWN,
-                           win32con.MK_CONTROL, lParam)
-        pycwnd.SendMessage(win32con.WM_RBUTTONUP, 0, lParam)
 
+# Add alphanumeric keys
+hotkey_dict = {}
+for char in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789':
+    hotkey_dict[char.lower()] = ord(char)
 
-
-hotkey_dict = {'f1': win32con.VK_F1,
-               'f2': win32con.VK_F2,
-               'f3': win32con.VK_F3,
-               'f4': win32con.VK_F4,
-               'f5': win32con.VK_F5,
-               'f6': win32con.VK_F6,
-               'f7': win32con.VK_F7,
-               'f8': win32con.VK_F8,
-               'f9': win32con.VK_F9,
-               'f10': win32con.VK_F10,
-               'f11': win32con.VK_F11,
-               'f12': win32con.VK_F12,
-               'shift': win32con.VK_SHIFT,
-               'ctrl': win32con.VK_CONTROL,
-               'space': win32con.VK_SPACE,
-               '3': 0x33,
-               '4': 0x34
-               }
-
+# Add special keys
+special_keys = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'shift', 'control', 'space']
+for key in special_keys:
+    hotkey_dict[key] = getattr(win32con, 'VK_' + key.upper())
 
 def send_keyboard_input(pycwnd, hotkey=None, msg=None, modifier=None):
-    # send_click_input(pycwnd, 15, 15)
+    keys_to_send = []
+
     if modifier is not None:
-        if hotkey.lower() in hotkey_dict:
-            pycwnd.SendMessage(win32con.WM_KEYDOWN,
-                               hotkey_dict[modifier.lower()], 0)
-            pycwnd.SendMessage(win32con.WM_KEYDOWN,
-                               hotkey_dict[hotkey.lower()], 0)
-            pycwnd.SendMessage(win32con.WM_KEYUP,
-                               hotkey_dict[hotkey.lower()], 0)
-            pycwnd.SendMessage(win32con.WM_KEYUP,
-                               hotkey_dict[modifier.lower()], 0)
-    else:
-        if hotkey.lower() in hotkey_dict:
-            pycwnd.SendMessage(win32con.WM_KEYDOWN,
-                               hotkey_dict[hotkey.lower()], 0)
-            pycwnd.SendMessage(win32con.WM_KEYUP,
-                               hotkey_dict[hotkey.lower()], 0)
-        elif msg is not None:
-            for c in msg:
-                if c == "\n":
-                    pycwnd.SendMessage(win32con.WM_KEYDOWN,
-                                       win32con.VK_RETURN, 0)
-                    pycwnd.SendMessage(win32con.WM_KEYUP,
-                                       win32con.VK_RETURN, 0)
-                else:
-                    pycwnd.SendMessage(win32con.WM_CHAR, ord(c), 0)
-            pycwnd.UpdateWindow()
+        keys_to_send.append(modifier.lower())
+    if hotkey is not None and hotkey.lower() in hotkey_dict:
+        keys_to_send.append(hotkey.lower())
 
-# whndl = get_whndl('Tibia - George sadfrog')
-# print("whndl: ", whndl)
+    for key in keys_to_send:
+        pycwnd.SendMessage(win32con.WM_KEYDOWN, hotkey_dict[key], 0)
 
-### NEEDED IF WINDOW HAS CHILDS ###
-# def callback(hwnd, hwnds):
-#     if win32gui.IsWindowVisible(hwnd) and win32gui.IsWindowEnabled(hwnd):
-#         hwnds[win32gui.GetClassName(hwnd)] = hwnd
-#     return True
-#
+    if msg is not None:
+        for c in msg:
+            if c == "\n":
+                pycwnd.SendMessage(win32con.WM_KEYDOWN, win32con.VK_RETURN, 0)
+                pycwnd.SendMessage(win32con.WM_KEYUP, win32con.VK_RETURN, 0)
+            else:
+                pycwnd.SendMessage(win32con.WM_CHAR, ord(c), 0)
 
-# hwnds = {}
-# win32gui.EnumChildWindows(whndl, callback, hwnds)
-# print("hwnds: ", hwnds)
-# whndl = hwnds['Edit']
+    for key in reversed(keys_to_send):
+        pycwnd.SendMessage(win32con.WM_KEYUP, hotkey_dict[key], 0)
 
-# pycwnd = make_pycwnd(whndl)
-# msg = "It works !\n"
-# msg = "f11"
-# send_keyboard_input(pycwnd,msg)
-# send_click_input(pycwnd, 1170, 550)
-
+    pycwnd.UpdateWindow()
 
 def send_key(hotkey, pycwnd, msg=None, modifier=None):
     send_keyboard_input(pycwnd, hotkey, msg, modifier)
 
 
-def send_click(x, y, pycwnd, button='left'):
-    send_click_input(pycwnd, x, y, button)
+def send_click_input(pycwnd, x, y, button='left', modifier=None):
+    lParam = win32api.MAKELONG(x, y)
 
-# https://docs.microsoft.com/sv-se/windows/desktop/inputdev/virtual-key-codes
-#send_input('Tibia -', 'f11')
+    # Move the mouse to the specified coordinates (optional but might be necessary)
+    pycwnd.SendMessage(win32con.WM_MOUSEMOVE, 0, lParam)
+
+    # Send modifier key down message if specified
+    if modifier is not None and modifier.lower() in hotkey_dict:
+        modifier_code = hotkey_dict[modifier.lower()]
+        pycwnd.SendMessage(win32con.WM_KEYDOWN, modifier_code, 0)
+        pycwnd.UpdateWindow()
+
+    # Send mouse click messages
+    if button == 'left':
+        pycwnd.SendMessage(win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+        pycwnd.SendMessage(win32con.WM_LBUTTONUP, 0, lParam)
+    elif button == 'right':
+        pycwnd.SendMessage(win32con.WM_RBUTTONDOWN, win32con.MK_RBUTTON, lParam)
+        pycwnd.SendMessage(win32con.WM_RBUTTONUP, 0, lParam)
+    else:
+        raise ValueError("Invalid button type. Use 'left' or 'right'.")
+
+    # Send modifier key up message if specified
+    if modifier is not None:
+        pycwnd.SendMessage(win32con.WM_KEYUP, modifier_code, 0)
+        pycwnd.UpdateWindow()
+
+def send_click(x, y, pycwnd, button='left', modifier=None):
+    send_click_input(pycwnd, x, y, button, modifier)
+
+

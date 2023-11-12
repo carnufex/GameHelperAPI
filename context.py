@@ -3,7 +3,7 @@ context = {
     'healing': {
         'potions': {
             'hp': {
-                'enabled': True,
+                'enabled': False,
                 'hotkey': 'f9',
                 'hpPc': 30,
             },
@@ -17,7 +17,7 @@ context = {
             "criticalHealing": {
               "enabled": True,
               "hotkey": "f3",
-              "hpPc": 100,
+              "hpPc": 60,
               "mpPc": 20,
               "spell": "exura san"
             },
@@ -27,6 +27,12 @@ context = {
               "hpPc": 80,
               "mpPc": 10,
               "spell": "exura gran"
+            },
+            "paralyze": {
+                "enabled": True,
+                "hotkey": "f1",
+                "mpPc": 20,
+                "spell": "utani hur"
             }
         }
     },
@@ -42,5 +48,13 @@ context = {
         'mpPc': None,
         'isParalyzed': None
     },
-    'screenshot': None
+    'screenshot': None,
+    'trigger': {
+        'looting': False
+    },
+    'map': {
+        'coordinate': None,
+        'previousCoordinate': None,
+        'lastCoordinateVisited': None,
+    },
 }

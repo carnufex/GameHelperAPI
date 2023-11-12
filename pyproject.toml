@@ -10,7 +10,7 @@ mypy = "^1.1.1"
 nptyping = "^2.5.0"
 numba = "^0.56.4"
 numpy = "1.21.4"
-opencv-python = "^4.6.0.66"
+opencv-python = "4.7.0.72"
 pillow = "^9.1.1"
 pyautogui = "^0.9.53"
 pygetwindow = "^0.0.9"
@@ -20,6 +20,7 @@ tcod = "^13.8.1"
 tinydb = "^4.8.0"
 xxhash = "^3.1.0"
 pywin32 = "^306"
+keyboard = "^0.13.5"
 
 
 [build-system]
