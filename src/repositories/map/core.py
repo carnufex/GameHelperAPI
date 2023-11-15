@@ -26,28 +26,32 @@ def getCoordinate(screenshot: GrayImage, previousCoordinate: Coordinate = None) 
     if MapHashedImg in coordinates:
         return coordinates[MapHashedImg]
     if previousCoordinate is not None:
-        (previousCoordinateXPixel, previousCoordinateYPixel) = getPixelFromCoordinate(
-            previousCoordinate)
-        paddingSize = 20
-        yStart = previousCoordinateYPixel - \
-            (dimensions['halfHeight'] + paddingSize)
-        yEnd = previousCoordinateYPixel + \
-            (dimensions['halfHeight'] + 1 + paddingSize)
-        xStart = previousCoordinateXPixel - \
-            (dimensions['halfWidth'] + paddingSize)
-        xEnd = previousCoordinateXPixel + \
-            (dimensions['halfWidth'] + paddingSize)
-        areaImgToCompare = floorsImgs[floorLevel][yStart:yEnd, xStart:xEnd]
-        areaFoundImg = locate(
-            areaImgToCompare, MapImage, confidence=0.9)
-        if areaFoundImg:
-            currentCoordinateXPixel = previousCoordinateXPixel - \
-                paddingSize + areaFoundImg[0]
-            currentCoordinateYPixel = previousCoordinateYPixel - \
-                paddingSize + areaFoundImg[1]
-            (currentCoordinateX, currentCoordinateY) = getCoordinateFromPixel(
-                (currentCoordinateXPixel, currentCoordinateYPixel))
-            return (currentCoordinateX, currentCoordinateY, floorLevel)
+        try:
+            (previousCoordinateXPixel, previousCoordinateYPixel) = getPixelFromCoordinate(
+                previousCoordinate)
+            paddingSize = 20
+            yStart = previousCoordinateYPixel - \
+                (dimensions['halfHeight'] + paddingSize)
+            yEnd = previousCoordinateYPixel + \
+                (dimensions['halfHeight'] + 1 + paddingSize)
+            xStart = previousCoordinateXPixel - \
+                (dimensions['halfWidth'] + paddingSize)
+            xEnd = previousCoordinateXPixel + \
+                (dimensions['halfWidth'] + paddingSize)
+            areaImgToCompare = floorsImgs[floorLevel][yStart:yEnd, xStart:xEnd]
+            areaFoundImg = locate(
+                areaImgToCompare, MapImage, confidence=0.9)
+            if areaFoundImg:
+                currentCoordinateXPixel = previousCoordinateXPixel - \
+                    paddingSize + areaFoundImg[0]
+                currentCoordinateYPixel = previousCoordinateYPixel - \
+                    paddingSize + areaFoundImg[1]
+                (currentCoordinateX, currentCoordinateY) = getCoordinateFromPixel(
+                    (currentCoordinateXPixel, currentCoordinateYPixel))
+                return (currentCoordinateX, currentCoordinateY, floorLevel)
+        except:
+            print("exception in previousCoordinate")
+            previousCoordinate = None
     imgCoordinate = locate(floorsImgs[floorLevel], MapImage, confidence=0.75)
     if imgCoordinate is None:
         return None

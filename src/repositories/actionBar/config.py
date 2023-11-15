@@ -56,7 +56,9 @@ images = {
         'exura san': loadFromRGBToGray(f'{cooldownsImagesPath}/exuraSan.png'),
         'exura gran': loadFromRGBToGray(f'{cooldownsImagesPath}/exuraGran.png'),
         'exura': loadFromRGBToGray(f'{cooldownsImagesPath}/exura.png'),
-
+        'exori san': loadFromRGBToGray(f'{cooldownsImagesPath}/exoriSan.png'),
+        'exevo mas san': loadFromRGBToGray(f'{cooldownsImagesPath}/exevoMasSan.png'),
+        'exura gran san': loadFromRGBToGray(f'{cooldownsImagesPath}/exuraGranSan.png')
 
 
     },

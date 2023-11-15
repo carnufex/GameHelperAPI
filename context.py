@@ -3,9 +3,9 @@ context = {
     'healing': {
         'potions': {
             'hp': {
-                'enabled': False,
+                'enabled': True,
                 'hotkey': 'f9',
-                'hpPc': 30,
+                'hpPc': 50,
             },
             'mp': {
                 'enabled': True,
@@ -16,9 +16,16 @@ context = {
         'spells': {
             "criticalHealing": {
               "enabled": True,
+              "hotkey": "shift+f3",
+              "hpPc": 50,
+              "mpPc": 20,
+              "spell": "exura gran san"
+            },
+            "mediumHealing": {
+              "enabled": True,
               "hotkey": "f3",
               "hpPc": 60,
-              "mpPc": 20,
+              "mpPc": 10,
               "spell": "exura san"
             },
             "lightHealing": {
@@ -30,9 +37,9 @@ context = {
             },
             "paralyze": {
                 "enabled": True,
-                "hotkey": "f1",
-                "mpPc": 20,
-                "spell": "utani hur"
+                "hotkey": "f12",
+                "mpPc": 5,
+                "spell": "exura"
             }
         }
     },

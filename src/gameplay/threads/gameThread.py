@@ -32,7 +32,7 @@ class GameThread:
                     pickUpLoot(self.context['pycwnd'])
                     self.context['trigger']['looting'] = False
 
-                self.context = self.wrapUp(self.context)
+                # self.context = self.wrapUp(self.context)
                 endTime = time()
                 diff = endTime - loop_time
                 sleep(max(0.045 - diff, 0))
@@ -47,7 +47,7 @@ class GameThread:
     def updateContext(self, context):
         context = updateScreenshotMiddleware(context)
         context = updatePlayerStatusMiddleware(context)
-        context = updateMapMiddleware(context)
+        # context = updateMapMiddleware(context)
         return context
     
         

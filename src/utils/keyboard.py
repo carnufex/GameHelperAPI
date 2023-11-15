@@ -1,6 +1,7 @@
 import os
 import random
 import time
+import pyautogui
 
 import win32con
 
@@ -9,7 +10,7 @@ import win32gui
 import win32service
 import win32ui
 
-
+pyautogui.PAUSE = 0
 
 # Add alphanumeric keys
 hotkey_dict = {}
@@ -25,7 +26,9 @@ def send_keyboard_input(pycwnd, hotkey=None, msg=None, modifier=None):
     keys_to_send = []
 
     if modifier is not None:
-        keys_to_send.append(modifier.lower())
+        # keys_to_send.append(modifier.lower())
+        pyautogui.keyDown(modifier)
+        time.sleep(0.01)
     if hotkey is not None and hotkey.lower() in hotkey_dict:
         keys_to_send.append(hotkey.lower())
 
@@ -42,6 +45,10 @@ def send_keyboard_input(pycwnd, hotkey=None, msg=None, modifier=None):
 
     for key in reversed(keys_to_send):
         pycwnd.SendMessage(win32con.WM_KEYUP, hotkey_dict[key], 0)
+
+    if modifier is not None:
+        # keys_to_send.append(modifier.lower())
+        pyautogui.keyUp(modifier)
 
     pycwnd.UpdateWindow()
 
