@@ -3,8 +3,8 @@ from time import sleep, time
 import traceback
 from src.gameplay.middlewares.mapMiddleware import updateMapMiddleware
 from src.gameplay.core.tasks.loot import pickUpLoot
-from src.gameplay.healing.healingBySpells import healingBySpells
-from src.gameplay.healing.healingByPotions import healingByPotions
+from src.gameplay.healing.healingBySpells import healingBySpells, initHealingOrchestrator
+from src.gameplay.healing.healingByPotions import healingByPotions, initItemOrchestrator
 from src.gameplay.middlewares.playerStatus import updatePlayerStatusMiddleware
 from src.gameplay.middlewares.screenshotMiddleware import updateScreenshotMiddleware
 from src.gameplay.threads.keyListener import key_listener
@@ -26,8 +26,8 @@ class GameThread:
                     pass
                 loop_time = time()
                 self.context = self.updateContext(self.context)
-                self.context= healingByPotions(self.context)
-                self.context = healingBySpells(self.context)
+                healingByPotions(self.context)
+                healingBySpells(self.context)
                 if self.context['trigger']['looting']:
                     pickUpLoot(self.context['pycwnd'])
                     self.context['trigger']['looting'] = False
@@ -56,7 +56,8 @@ class GameThread:
     
     def init(self, context):
         context['pycwnd'] = getPycwnd()
-
+        initHealingOrchestrator(context)
+        initItemOrchestrator(context)
         # Create a thread for the key listener and set it as a daemon thread
         key_listener_thread = threading.Thread(target=key_listener, daemon=True, args=(self.callback,))
         # Start the thread

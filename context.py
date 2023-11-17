@@ -1,3 +1,6 @@
+from src.gameplay.core.tasks.orchestrator import TasksOrchestrator
+
+
 context = {
     'pause': False,
     'healing': {
@@ -59,6 +62,14 @@ context = {
     'trigger': {
         'looting': False
     },
+    'orchestrators': {
+        'healing': TasksOrchestrator(),
+        'item': TasksOrchestrator(),
+    },
+
+
+
+
     'map': {
         'coordinate': None,
         'previousCoordinate': None,

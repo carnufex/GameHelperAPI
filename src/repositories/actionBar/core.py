@@ -39,7 +39,8 @@ def hasCooldownByImage(screenshot: GrayImage, cooldownImage: GrayImage) -> Union
         listOfCooldownsImage, cooldownImage)
     if cooldownImagePosition is None:
         return False
-    return listOfCooldownsImage[20:21, cooldownImagePosition[0]:cooldownImagePosition[0] + cooldownImagePosition[2]][0][0] == 255
+    offset = 2 # this is needed since the update frequency of the cooldown bar is causing 0.2s delay when looking at the very first pixel.
+    return listOfCooldownsImage[20:21, cooldownImagePosition[0]+offset:cooldownImagePosition[0]+ offset + cooldownImagePosition[2]][0][0] == 255
 
 
 # TODO: add unit tests
