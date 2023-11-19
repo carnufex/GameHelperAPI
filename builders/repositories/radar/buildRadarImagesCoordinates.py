@@ -8,8 +8,8 @@ from src.utils.image import loadFromRGBToGray
 def main():
     floorLevel = 7
     coordinatesAsArray = np.array([], dtype=CoordinateHash)
-    startingXCoordinate = 31744
-    startingYCoordinate = 30976
+    startingXCoordinate = 31844 # added 100 px border on all sides, 31744, 30976
+    startingYCoordinate = 31076
     pixels = loadFromRGBToGray('radar/images/floor-7.png')
     for y, rowPixels in enumerate(pixels):
         for x, pixelColor in enumerate(rowPixels):

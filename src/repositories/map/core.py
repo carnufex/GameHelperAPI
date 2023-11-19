@@ -4,6 +4,7 @@ from typing import Union
 from src.utils.typings import Coordinate, GrayImage, GrayPixel, Waypoint, WaypointList
 from src.utils.core import hashit, hashitHex, locate
 from src.utils.coordinate import getCoordinateFromPixel, getPixelFromCoordinate
+from src.utils.image import save
 from .config import availableTilesFrictions, breakpointTileMovementSpeed, coordinates, dimensions, floorsImgs, floorsLevelsImgsHashes, floorsPathsSqms, nonWalkablePixelsColors, tilesFrictionsWithBreakpoints, walkableFloorsSqms
 from .extractors import getMapImage
 from .locators import getMapToolsPosition
@@ -26,32 +27,9 @@ def getCoordinate(screenshot: GrayImage, previousCoordinate: Coordinate = None) 
     if MapHashedImg in coordinates:
         return coordinates[MapHashedImg]
     if previousCoordinate is not None:
-        try:
-            (previousCoordinateXPixel, previousCoordinateYPixel) = getPixelFromCoordinate(
-                previousCoordinate)
-            paddingSize = 20
-            yStart = previousCoordinateYPixel - \
-                (dimensions['halfHeight'] + paddingSize)
-            yEnd = previousCoordinateYPixel + \
-                (dimensions['halfHeight'] + 1 + paddingSize)
-            xStart = previousCoordinateXPixel - \
-                (dimensions['halfWidth'] + paddingSize)
-            xEnd = previousCoordinateXPixel + \
-                (dimensions['halfWidth'] + paddingSize)
-            areaImgToCompare = floorsImgs[floorLevel][yStart:yEnd, xStart:xEnd]
-            areaFoundImg = locate(
-                areaImgToCompare, MapImage, confidence=0.9)
-            if areaFoundImg:
-                currentCoordinateXPixel = previousCoordinateXPixel - \
-                    paddingSize + areaFoundImg[0]
-                currentCoordinateYPixel = previousCoordinateYPixel - \
-                    paddingSize + areaFoundImg[1]
-                (currentCoordinateX, currentCoordinateY) = getCoordinateFromPixel(
-                    (currentCoordinateXPixel, currentCoordinateYPixel))
-                return (currentCoordinateX, currentCoordinateY, floorLevel)
-        except:
-            print("exception in previousCoordinate")
-            previousCoordinate = None
+        prevCoord = findCoordinateFromPreviousPosition(screenshot, previousCoordinate, MapImage, floorLevel)
+        if prevCoord is not None:
+            return prevCoord
     imgCoordinate = locate(floorsImgs[floorLevel], MapImage, confidence=0.75)
     if imgCoordinate is None:
         return None
@@ -61,6 +39,44 @@ def getCoordinate(screenshot: GrayImage, previousCoordinate: Coordinate = None) 
         (xImgCoordinate, yImgCoordinate))
     return (xCoordinate, yCoordinate, floorLevel)
 
+
+def findCoordinateFromPreviousPosition(screenshot: GrayImage, previousCoordinate: Coordinate, mapImage: GrayImage, floorLevel: int) -> Union[Coordinate, None]:
+    try:
+        (previousCoordinateXPixel, previousCoordinateYPixel) = getPixelFromCoordinate(
+            previousCoordinate)
+        (yStart, yEnd, xStart, xEnd, paddings) = getPaddings(previousCoordinateXPixel, previousCoordinateYPixel)
+        areaImgToCompare = floorsImgs[floorLevel][yStart:yEnd, xStart:xEnd]
+        areaFoundImg = locate(
+            areaImgToCompare, mapImage, confidence=0.9)
+        if areaFoundImg:
+            currentCoordinateXPixel = previousCoordinateXPixel - \
+                paddings["xStart"] + areaFoundImg[0]
+            currentCoordinateYPixel = previousCoordinateYPixel - \
+                paddings["yStart"] + areaFoundImg[1]
+            (currentCoordinateX, currentCoordinateY) = getCoordinateFromPixel(
+                (currentCoordinateXPixel, currentCoordinateYPixel))
+            return (currentCoordinateX, currentCoordinateY, floorLevel)
+        else:
+            print("didnt fint img")
+    except:
+        print("exception in previousCoordinate")
+        return None
+
+def getPaddings(previousCoordinateXPixel: int, previousCoordinateYPixel: int) -> tuple:
+    
+    paddings = {"yStart": 20, "xStart": 20, "yEnd": 20, "xEnd": 20}
+    yStart = previousCoordinateYPixel - \
+        (dimensions['halfHeight'] + paddings["yStart"])
+    if yStart < 0: # this will have to be applied to all edges later, not just top.
+        yStart = 0
+        paddings["yStart"] = 0
+    yEnd = previousCoordinateYPixel + \
+        (dimensions['halfHeight'] + 1 + paddings["yEnd"])
+    xStart = previousCoordinateXPixel - \
+        (dimensions['halfWidth'] + paddings["xStart"])
+    xEnd = previousCoordinateXPixel + \
+        (dimensions['halfWidth'] + paddings["xEnd"])
+    return (yStart, yEnd, xStart, xEnd, paddings)
 
 # TODO: add unit tests
 # TODO: add perf

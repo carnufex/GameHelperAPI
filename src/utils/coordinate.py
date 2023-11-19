@@ -29,8 +29,8 @@ def getAvailableAroundCoordinates(coordinate: Coordinate, walkableFloorSqms: np.
     aroundPixelsCoordinates = getAroundPixelsCoordinates(pixelCoordinate)
     availableAroundPixelsCoordinates = getAvailableAroundPixelsCoordinates(
         aroundPixelsCoordinates, walkableFloorSqms)
-    xCoordinates = availableAroundPixelsCoordinates[:, 0] + 31744
-    yCoordinates = availableAroundPixelsCoordinates[:, 1] + 30976
+    xCoordinates = availableAroundPixelsCoordinates[:, 0] + 31844 # added 100 px border on all sides, 31744, 30976
+    yCoordinates = availableAroundPixelsCoordinates[:, 1] + 31076 
     floors = np.broadcast_to(
         coordinate[2], (availableAroundPixelsCoordinates.shape[0]))
     return np.column_stack(
@@ -47,7 +47,7 @@ def getClosestCoordinate(coordinate: Coordinate, coordinates: CoordinateList) ->
 
 
 def getCoordinateFromPixel(pixel: XYCoordinate) -> Coordinate:
-    return pixel[0] + 31744, pixel[1] + 30976
+    return pixel[0] + 31844, pixel[1] + 31076 # added 100 px border on all sides, 31744, 30976
 
 
 def getDirectionBetweenCoordinates(coordinate: Coordinate, nextCoordinate: Coordinate) -> Union[str, None]:
@@ -62,4 +62,4 @@ def getDirectionBetweenCoordinates(coordinate: Coordinate, nextCoordinate: Coord
 
 
 def getPixelFromCoordinate(coordinate: Coordinate) -> XYCoordinate:
-    return coordinate[0] - 31744, coordinate[1] - 30976
+    return coordinate[0] - 31844, coordinate[1] - 31076 # added 100 px border on all sides, 31744, 30976
