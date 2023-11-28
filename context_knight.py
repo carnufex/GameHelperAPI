@@ -8,41 +8,41 @@ context = {
             'hp': {
                 'enabled': True,
                 'hotkey': 'f9',
-                'hpPc': 50,
+                'hpPc': 30,
             },
             'mp': {
                 'enabled': True,
                 'hotkey': 'f6',
-                'mpPc': 70
+                'mpPc': 60
             },
         },
         'spells': {
             "criticalHealing": {
-              "enabled": True,
+              "enabled": False,
               "hotkey": "shift+f3",
-              "hpPc": 60,
+              "hpPc": 50,
               "mpPc": 20,
               "spell": "exura gran san"
             },
             "mediumHealing": {
-              "enabled": True,
+              "enabled": False,
               "hotkey": "f3",
-              "hpPc": 80,
+              "hpPc": 60,
               "mpPc": 10,
               "spell": "exura san"
             },
             "lightHealing": {
               "enabled": True,
               "hotkey": "f2",
-              "hpPc": 85,
-              "mpPc": 10,
+              "hpPc": 80,
+              "mpPc": 15,
               "spell": "exura gran"
             },
             "paralyze": {
                 "enabled": True,
-                "hotkey": "f12",
-                "mpPc": 5,
-                "spell": "exura"
+                "hotkey": "f2",
+                "mpPc": 15,
+                "spell": "exura ico"
             }
         }
     },

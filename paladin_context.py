@@ -20,21 +20,21 @@ context = {
             "criticalHealing": {
               "enabled": True,
               "hotkey": "shift+f3",
-              "hpPc": 60,
+              "hpPc": 50,
               "mpPc": 20,
               "spell": "exura gran san"
             },
             "mediumHealing": {
               "enabled": True,
               "hotkey": "f3",
-              "hpPc": 80,
+              "hpPc": 60,
               "mpPc": 10,
               "spell": "exura san"
             },
             "lightHealing": {
               "enabled": True,
               "hotkey": "f2",
-              "hpPc": 85,
+              "hpPc": 80,
               "mpPc": 10,
               "spell": "exura gran"
             },
